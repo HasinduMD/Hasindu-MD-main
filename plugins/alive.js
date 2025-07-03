@@ -1,19 +1,16 @@
-const { cmd, commands } = require('../command')
-
 cmd({
     pattern: "alive",
-    react: "👋",
     desc: "check bot alive",
     category: "main",
     filename: __filename
 },
 async (conn, mek, m, {
-    from, quoted, body, isCmd, command, args, q,
-    isGroup, sender, senderNumber, botNumber2, botNumber,
-    pushname, isMe, isOwner, groupMetadata, groupName,
-    participants, groupAdmins, isBotAdmins, isAdmins, reply
+    from, pushname, reply
 }) => {
     try {
+        // ✅ manually trigger reaction
+        await m.react("👋")
+
         const dateObj = new Date()
         const hours = dateObj.getHours()
         const date = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
