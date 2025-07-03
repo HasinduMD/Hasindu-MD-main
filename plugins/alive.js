@@ -1,28 +1,59 @@
-const Config = require('../config')
+const { cmd, commands } = require('../command')
 
-module.exports = {
-  cmd: ['alive', 'bot', 'online'],
-  desc: 'Check if bot is alive',
-  type: 'info',
-  exec: async (m, {
-    conn
-  }) => {
-    const aliveText = `╭─────────────◆\n│ *🤖 Hasindu-MD Bot is Online!*\n│\n│ 👑 *Owner:* ${Config.ownername}\n│ 🏷️ *Version:* 1.0.0\n│ 🧠 *AI Powered:* ChatGPT\n│ 🌐 *Prefix:* . (dot)\n│ 📆 *Uptime:* ${runtime(process.uptime())}\n╰─────────────◆`
+cmd({
+    pattern: "alive",
+    react: "👋",
+    desc: "check bot alive",
+    category: "main",
+    filename: __filename
+},
+async (conn, mek, m, {
+    from, quoted, body, isCmd, command, args, q,
+    isGroup, sender, senderNumber, botNumber2, botNumber,
+    pushname, isMe, isOwner, groupMetadata, groupName,
+    participants, groupAdmins, isBotAdmins, isAdmins, reply
+}) => {
+    try {
+        const dateObj = new Date()
+        const hours = dateObj.getHours()
+        const date = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
+        const time = dateObj.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
 
-    const buttons = [
-      { buttonId: '.menu', buttonText: { displayText: '📂 Menu' }, type: 1 },
-      { buttonId: '.owner', buttonText: { displayText: '👑 Owner' }, type: 1 }
-    ]
+        let greeting = "👋 Hello"
+        if (hours >= 5 && hours < 12) greeting = "🌅 Good Morning"
+        else if (hours >= 12 && hours < 17) greeting = "🌞 Good Afternoon"
+        else if (hours >= 17 && hours < 20) greeting = "🌇 Good Evening"
+        else greeting = "🌙 Good Night"
 
-    await m.sendButton(aliveText, '🔥 Powered by Hasindu MD', buttons, 1)
-  }
-}
+        let madeMenu = `*╭─❖ нαѕιη∂υ м∂ ᴀℓινє ❖─╮*
 
-function runtime(seconds) {
-  seconds = Number(seconds)
-  var d = Math.floor(seconds / (3600 * 24))
-  var h = Math.floor(seconds % (3600 * 24) / 3600)
-  var m = Math.floor(seconds % 3600 / 60)
-  var s = Math.floor(seconds % 60)
-  return `${d}d ${h}h ${m}m ${s}s`
-}
+${greeting}, *${pushname}*!
+
+📅 *Date:* ${date}
+⏰ *Time:* ${time}
+
+🤖 *нαѕιη∂υ-м∂ αℓινє ησω!*  
+🛠️ *How can I assist you today?*
+
+📌 Type *.menu* to view all commands.
+
+> *⚡ Powered by Hasindu MD ⚡*`
+
+        const buttons = [
+            { buttonId: '.menu', buttonText: { displayText: '📂 Menu' }, type: 1 },
+            { buttonId: '.owner', buttonText: { displayText: '👑 Owner' }, type: 1 }
+        ]
+
+        await conn.sendMessage(from, {
+            image: { url: "https://i.ibb.co/kVD2Ddcd/Golden-Queen-MD-VIMAMODS-6r4acawr.jpg" },
+            caption: madeMenu,
+            footer: '🤖 Hasindu-MD Alive System',
+            buttons,
+            headerType: 4
+        }, { quoted: mek })
+
+    } catch (e) {
+        console.log(e)
+        reply(`${e}`)
+    }
+})
